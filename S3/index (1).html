@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+    body {
+        display: flex;
+    }
+#signUpContainer {
+    margin: auto;
+    display: none;
+}
+
+
+#userListContainer {
+    display: none;
+    /* width: 35%; */
+}
+#userList {
+    position: relative;
+    left: -20px;
+}
+
+/* Style all input fields */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 6px;
+    margin-bottom: 16px;
+}
+
+/* Style the submit button */
+input[type=submit] {
+    background-color: #0d3758;
+    color: white;
+    cursor: pointer;
+    letter-spacing: 3px;
+    text-transform:uppercase;
+}
+
+/* Style the container for inputs */
+.container {
+    margin: auto;
+    background-color: #f1f1f1;
+    padding: 20px;
+    position: fixed;
+    left: 34%;
+    top: 10%;
+    width: 25%;
+}
+
+/* The message box is shown when the user clicks on the password field */
+#message {
+    display:none;
+    background: #f1f1f1;
+    color: #000;
+    position: absolute;
+    padding: 20px;
+    margin: 4%;
+    right: 0;
+    width: 22%;
+}
+
+#message p {
+    padding: 10px 35px;
+    font-size: 18px;
+}
+
+/* Add a green text color and a checkmark when the requirements are right */
+.valid {
+    color: green;
+}
+
+.valid:before {
+    position: relative;
+    left: -35px;
+    content: "✔";
+}
+
+/* Add a red text color and an "x" when the requirements are wrong */
+.invalid {
+    color: red;
+}
+#errorname {
+    color: red;
+}
+#errorname1 {
+    color: red;
+}
+
+.invalid:before {
+    position: relative;
+    left: -35px;
+    content: "✖";
+}
+
+#userProfile {
+    display: none;
+}
+.regslink {
+    text-decoration: underline;
+    cursor: pointer;
+}
+h3 {
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+li {
+    list-style: none;
+    border-style: solid;
+    border-color: green;
+}
+.signUpAll {
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: bold;
+    color: black;
+}
+#removeUser{
+  display: none;
+}
+
+
+</style>
+</head>
+<body>
+    <div id="signUpContainer" class="container">
+        <h3>Sign Up Here.</h3>
+        <div>
+            <label for="usrname">Username:</label>
+            <input type="text" id="usrname" name="usrname" required>
+
+            <label for="usrname">Email:</label>
+            <input type="email" id="email" name="email" required>
+        
+            <label for="psw">Password</label>
+            <input type="password" id="psw" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
+
+            <label for="psw">Confirm Password</label>
+            <input type="password" id="conf-psw" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
+            
+            <input type="submit" value="signUp" onclick="signUp()">
+            <span id="errorname">    </span>
+        </div>        
+    </div>
+
+    <!-- <div id="message">
+        <h3>Password must contain the following:</h3>
+        <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+        <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+        <p id="number" class="invalid">A <b>number</b></p>
+        <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+    </div> -->
+
+    <div id="loginContainer" class="container">
+        <h3>Login</h3>
+        <div>
+            <label for="usrname">Username</label>
+            <input type="text" id="username" name="usrname" required>
+        
+            <label for="psw">Password</label>
+            <input type="password" id="pwd" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters" required>
+            
+            <input type="submit" value="login" onclick="login()">
+            <span id="errorname1">    </span>
+        </div>
+        <div><h4 class="regslink" onclick="displaySingup()">Not registered yet, Register Now</h4></div>
+    </div>
+    
+    <div id="userProfile" class="container">
+        <div>
+            <label for="usrname" id="welcomeUser"></label>
+            <a class="signUpAll" onclick="showAllUser()" href="#">display all signup user's</a>
+        </div>
+    </div>
+
+    <div id="userListContainer" class="container">
+        <div> <span style="padding-left:20px">UserName </span> <span style="padding-left:22px">Email</span></div> 
+        
+        <div><ul  id="userList"></ul></div>
+        <a class="signUpAll" id="removeUser" onclick="removeUser()" href="#">Remove</a>
+    </div>
+                
+<script>
+var myInput = document.getElementById("psw");
+var letter = document.getElementById("letter");
+var capital = document.getElementById("capital");
+var number = document.getElementById("number");
+var length = document.getElementById("length");
+
+
+
+
+function displaySingup(){
+    document.getElementById("signUpContainer").style.display = 'block';
+    document.getElementById("loginContainer").style.display = 'none';
+  }
+
+
+////////////////////////////======For Sign Up Start here==============////////
+function signUp() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        let data = JSON.parse(this.response);
+        alert(`${data.message}`);
+        document.getElementById("signUpContainer").style.display = 'none';
+       document.getElementById("loginContainer").style.display = 'block';
+        
+    }
+  };
+ 
+  let id = document.getElementById("usrname").value;
+  let pwd = document.getElementById("psw").value;
+  let confirmPwd = document.getElementById("conf-psw").value;
+  let email = document.getElementById("email").value;
+
+  if(pwd != confirmPwd) {
+    document.getElementById('errorname').innerHTML = "Password and Confirm Password are not matching!"
+    // alert("Password and Confirm Password are not matching!");
+    return 0;
+  }
+
+  xhttp.open("POST", `https://ebz4i99l7j.execute-api.us-east-2.amazonaws.com/dev/signup`, true);
+  xhttp.setRequestHeader("Accept", "application/json;");
+  xhttp.setRequestHeader("Content-type", "application/json;");
+  var payload={
+    username:id,
+    password:pwd,
+    email:email
+  }
+  xhttp.send(JSON.stringify(payload));
+
+}
+////////////////////////////======For Sign Up End here==============////////
+
+////////////////////////////======For Login Start here==============////////
+function login() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+        loadProfile(JSON.parse(this.response));
+    }
+  };
+
+  let id = document.getElementById("username").value;
+  let pwd = document.getElementById("pwd").value;
+
+
+    //   xhttp.open("POST", "http://localhost:3000/users/login", true);
+    //   xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    //   xhttp.send(`username=${id}&password=${pwd}`);
+
+  // Server           https://ebz4i99l7j.execute-api.us-east-2.amazonaws.com/dev/login
+  xhttp.open("POST", `https://ebz4i99l7j.execute-api.us-east-2.amazonaws.com/dev/login`, true);
+  xhttp.setRequestHeader("Accept", "application/json;");
+  xhttp.setRequestHeader("Content-Type", "application/json;");
+  var payload = {
+    username: id,
+    password:pwd
+  }
+  xhttp.send(JSON.stringify(payload));
+}
+////////////////////////////======For Login End here==============////////
+
+
+////////////////////////////======For Load Profile Start here==============////////
+function loadProfile(data) {
+    if(!data.success) {
+        document.getElementById('errorname1').innerHTML = "User Name or Password is invalid!"
+        // alert("User Name or Password is invalid!");
+    } else {
+        document.getElementById("loginContainer").style.display = 'none';
+        document.getElementById("userProfile").style.display = 'block';
+        document.getElementById("welcomeUser").value = `Welcome ${data.message} to AWS!`;
+    }
+
+}
+////////////////////////////======For Load Profile End here==============////////
+
+////////////////////////////======For show All User Start here==============////////
+function showAllUser() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let data = JSON.parse(this.response).data;
+            document.getElementById('removeUser').style.display='block';
+            document.getElementById("userProfile").style.display = 'none';
+            document.getElementById("userListContainer").style.display = 'block';
+            
+            data.map((value, item) => {
+                nameList = `<li>  &nbsp; ${value.username}&nbsp;&nbsp;  &nbsp &nbsp &nbsp &nbsp &nbsp  ${value.email} </li>`;
+                document.getElementById("userList").innerHTML += nameList;
+            });
+        }
+    };
+
+    xhttp.open("GET", `https://ebz4i99l7j.execute-api.us-east-2.amazonaws.com/dev/getuserlist`, true);
+    xhttp.setRequestHeader("Accept", "application/json;");
+    xhttp.setRequestHeader("Content-type", "application/json;");
+    xhttp.send();
+}
+
+//////////////////////////////////////////////remove user list //////////////////////
+ function removeUser(){
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) {
+            let data = JSON.parse(this.response)
+            document.getElementById("userProfile").style.display = 'none';
+            document.getElementById("userListContainer").style.display = 'none';
+            document.getElementById("signUpContainer").style.display = 'block';
+            
+        }
+    };
+
+    xhttp.open("DELETE", `https://ebz4i99l7j.execute-api.us-east-2.amazonaws.com/dev/removeloginuser`, true);
+    xhttp.setRequestHeader("Accept", "application/json;");
+    xhttp.setRequestHeader("Content-type", "application/json;");
+    xhttp.send();
+
+ }
+
+//////////////////////////////////////////////end user list //////////////////////
+
+</script>
+
+</body>
+</html>
+
+
